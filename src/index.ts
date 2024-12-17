@@ -73,3 +73,48 @@ const element = createElement("div", { id: "test" },
 );
 
 console.log(JSON.stringify(element, null, 2));
+
+
+function createNodeFromMetadata(metadata: ReactComponentInternalMetadata): Node {
+    const { component, props, children } = metadata;
+
+    if (component.kind === "tag") {
+        const element = document.createElement(component.tagName);
+        Object.assign(element, props);
+        children.forEach(childNode => appendTagsToDom(element, childNode))
+        return element;
+    }
+    else {
+        throw new Error("Not Implemented yet.")
+    }
+}
+
+function appendTagsToDom(parent: HTMLElement | null, child: ReactComponentInternalMetadata | string) {
+    if (typeof child === "string") {
+        parent?.appendChild(document.createTextNode(child));
+    }
+    else {
+        parent?.appendChild(createNodeFromMetadata(child))
+    }
+}
+
+
+function applyComponentsToDom(metadata: ReactComponentInternalMetadata, parent: HTMLElement | null) {
+    if (parent === null) throw new Error("Aborted. no root element.");
+
+    const { component, props, children } = metadata;
+
+    if (component.kind === "tag") {
+        const element = document.createElement(component.tagName);
+        Object.assign(element, props);
+        parent.appendChild(element);
+        children.forEach(childNode => appendTagsToDom(element, childNode))
+    }
+    else {
+        throw new Error("Not Implemented yet.")
+    }
+}
+
+const rootElement: HTMLElement | null = document.querySelector("#root");
+
+applyComponentsToDom(element, rootElement)
