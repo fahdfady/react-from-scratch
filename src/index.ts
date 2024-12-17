@@ -1,49 +1,17 @@
-type AnyProps = Record<string, any>;
+import * as RType from "./types/types";
 
-export type ReactComponentFunction<T = AnyProps> = (props: T) => ReactComponentInternalMetadata;
 
-type externalComponent = keyof HTMLElementTagNameMap | ReactComponentFunction<any>;
-
-export type ReactComponentExternalMetadata<T extends AnyProps> = {
-    component: externalComponent;
-    props: T;
-    children: Array<ReactComponentInternalMetadata>;
-}
-
-export type TagComponent = {
-    kind: "tag";
-    tagName: keyof HTMLElementTagNameMap;
-};
-
-export type FunctionalComponent = {
-    kind: "function";
-    name: string;
-    function: (
-        props: Record<string, unknown> | null
-    ) => ReactComponentInternalMetadata;
-};
-
-export type ReactComponentInternalMetadata = {
-    id: string;
-    component: TagComponent | FunctionalComponent;
-    props: AnyProps;
-    children: Array<ReactComponentInternalMetadata | string>
-}
-
-function mapComponentToUnionTag(component: externalComponent): TagComponent | FunctionalComponent {
+function mapComponentToUnionTag(component: RType.externalComponent): RType.TagComponent | RType.FunctionalComponent {
     if (typeof component === "string") return { kind: "tag", tagName: component }
     return { kind: "function", name: component.name, function: component }
 }
 
-function resolveChildren() {
 
-}
-
-export const createElement = <T extends AnyProps>(
-    component: ReactComponentExternalMetadata<T>["component"], // Either an HTML tag or a function component
+export const createElement = <T extends RType.AnyProps>(
+    component: RType.ReactComponentExternalMetadata<T>["component"], // Either an HTML tag or a function component
     props: T, // Props passed to the component
-    ...children: Array<ReactComponentInternalMetadata | string> // Rest parameter for children
-): ReactComponentInternalMetadata => {
+    ...children: Array<RType.ReactComponentInternalMetadata | string> // Rest parameter for children
+): RType.ReactComponentInternalMetadata => {
 
     // check if the component is a function and invoke it to return its metadata
     if (typeof component === "function") {
@@ -57,9 +25,6 @@ export const createElement = <T extends AnyProps>(
         children // Children passed as an array
     })
 };
-
-
-
 
 // functional component
 function MyComponent(props: { title: string }) {
@@ -75,7 +40,7 @@ const element = createElement("div", { id: "test" },
 console.log(JSON.stringify(element, null, 2));
 
 
-function createNodeFromMetadata(metadata: ReactComponentInternalMetadata): Node {
+function createNodeFromMetadata(metadata: RType.ReactComponentInternalMetadata): Node {
     const { component, props, children } = metadata;
 
     if (component.kind === "tag") {
@@ -89,7 +54,7 @@ function createNodeFromMetadata(metadata: ReactComponentInternalMetadata): Node 
     }
 }
 
-function appendTagsToDom(parent: HTMLElement | null, child: ReactComponentInternalMetadata | string) {
+function appendTagsToDom(parent: HTMLElement | null, child: RType.ReactComponentInternalMetadata | string) {
     if (typeof child === "string") {
         parent?.appendChild(document.createTextNode(child));
     }
@@ -99,7 +64,7 @@ function appendTagsToDom(parent: HTMLElement | null, child: ReactComponentIntern
 }
 
 
-function applyComponentsToDom(metadata: ReactComponentInternalMetadata, parent: HTMLElement | null) {
+function applyComponentsToDom(metadata: RType.ReactComponentInternalMetadata, parent: HTMLElement | null) {
     if (parent === null) throw new Error("Aborted. no root element.");
 
     const { component, props, children } = metadata;
