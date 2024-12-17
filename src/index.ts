@@ -35,6 +35,10 @@ function mapComponentToUnionTag(component: externalComponent): TagComponent | Fu
     return { kind: "function", name: component.name, function: component }
 }
 
+function resolveChildren() {
+
+}
+
 export const createElement = <T extends AnyProps>(
     component: ReactComponentExternalMetadata<T>["component"], // Either an HTML tag or a function component
     props: T, // Props passed to the component
@@ -58,12 +62,14 @@ export const createElement = <T extends AnyProps>(
 
 
 // functional component
-function MyComponent() {
-    return createElement("h1", {}, "Heading 1 Tag")
+function MyComponent(props: { title: string }) {
+    return createElement("h1", {}, props.title);
 }
 
+const functionalElement = createElement(MyComponent, { title: "Welcome!" });
+
 const element = createElement("div", { id: "test" },
-    createElement("span", { className: "child" }, "Hello World")
+    createElement("span", { className: "child" }, "Hello World", functionalElement)
 );
 
-console.log(element)
+console.log(JSON.stringify(element, null, 2));
