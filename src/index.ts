@@ -7,7 +7,7 @@ function mapComponentToUnionTag(component: RType.externalComponent): RType.TagCo
 }
 
 
-export const createElement = <T extends RType.AnyProps>(
+const createElement = <T extends RType.AnyProps>(
     component: RType.ReactComponentExternalMetadata<T>["component"], // Either an HTML tag or a function component
     props: T, // Props passed to the component
     ...children: Array<RType.ReactComponentInternalMetadata | string> // Rest parameter for children

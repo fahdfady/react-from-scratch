@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./build --target browser",
+    "watch": "bun build ./src/index.ts --outdir ./build --watch --target browser"
+  }
+}
