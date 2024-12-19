@@ -10,6 +10,11 @@ export type ReactComponentExternalMetadata<T extends AnyProps> = {
     children: Array<ReactComponentInternalMetadata>;
 }
 
+export type TextComponent = {
+    kind: "text";
+    content: string;
+}
+
 export type TagComponent = {
     kind: "tag";
     tagName: keyof HTMLElementTagNameMap;
@@ -19,13 +24,19 @@ export type FunctionalComponent = {
     kind: "function";
     name: string;
     function: (
-        props: Record<string, unknown> | null
+        props: {
+            children: Array<ReactComponentInternalMetadata>;
+            [key: string]: unknown;
+        }
     ) => ReactComponentInternalMetadata;
 };
 
+export type ComponentType = TagComponent | FunctionalComponent | TextComponent;
+
+
 export type ReactComponentInternalMetadata = {
     id: string;
-    component: TagComponent | FunctionalComponent;
+    component: ComponentType;
     props: AnyProps;
-    children: Array<ReactComponentInternalMetadata | string>
+    children: Array<ReactComponentInternalMetadata >
 }
