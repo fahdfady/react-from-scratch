@@ -54,8 +54,6 @@ export const createElement = <T extends RType.AnyProps>(
 
 
 // to apply components to the dom for functinal components we'll use a lazy-evaluation approach of a Tree datastrcutre
-
-
 // a recursive function that turn the lazy internal metadata into a full view tree
 export function generateViewTree(internalMetadata: RType.ReactComponentInternalMetadata): RType.ReactViewTreeNode {
     const newNode: RType.ReactViewTreeNode = {
@@ -118,3 +116,28 @@ export function appendTagsToDom(parent: HTMLElement | null, child: RType.ReactCo
     if (!parent) return;
     parent.appendChild(createNodeFromMetadata(child))
 }
+
+export function applyComponentsToDom(viewNode: RType.ReactViewTreeNode, parent: HTMLElement | null) {
+    const { metadata, childNodes } = viewNode
+
+    switch (metadata.component.kind) {
+        case "tag": {
+            const element = document.createElement(metadata.component.tagName);
+            Object.assign(element, metadata.props);
+            parent?.appendChild(element);
+            metadata.children.forEach(childNode => appendTagsToDom(element, childNode))
+            console.log(element)
+            break;
+        }
+        case "text": {
+            const element = document.createTextNode(metadata.component.content);
+            console.log(element)
+            parent?.appendChild(element);
+            break;
+        }
+        case "function": {
+            // functional component has at most 1 child, since every element must have a parent when returned
+            applyComponentsToDom(childNodes[0], parent)
+        }
+    }
+} 
