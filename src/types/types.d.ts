@@ -40,9 +40,15 @@ export type ReactComponentInternalMetadata = {
     props: AnyProps;
     children: Array<ReactComponentInternalMetadata>
 }
+
 // tree node
 export type ReactViewTreeNode = {
     id: string,
     metadata: ReactComponentInternalMetadata, // node info
     childNodes: Array<ReactViewTreeNode>, // its children
+    parent: ReactViewTreeNode | null;
+}
+
+export type ReactViewTree = {
+    root: ReactViewTreeNode | null
 }

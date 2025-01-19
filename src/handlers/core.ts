@@ -52,7 +52,6 @@ export const createElement = <T extends RType.AnyProps>(
     })
 };
 
-
 // to apply components to the dom for functinal components we'll use a lazy-evaluation approach of a Tree datastrcutre
 // a recursive function that turn the lazy internal metadata into a full view tree
 export function generateViewTree(internalMetadata: RType.ReactComponentInternalMetadata): RType.ReactViewTreeNode {
@@ -60,6 +59,7 @@ export function generateViewTree(internalMetadata: RType.ReactComponentInternalM
         id: crypto.randomUUID(),
         metadata: internalMetadata,
         childNodes: [],
+        parent: null,
     };
 
     switch (internalMetadata.component.kind) {
@@ -89,6 +89,12 @@ export function generateViewTree(internalMetadata: RType.ReactComponentInternalM
     }
 
     return newNode
+}
+
+let currentTree: {
+    viewTree: RType.ReactViewTree | null,
+} = {
+    viewTree: null,
 }
 
 
@@ -140,4 +146,4 @@ export function applyComponentsToDom(viewNode: RType.ReactViewTreeNode, parent: 
             applyComponentsToDom(childNodes[0], parent)
         }
     }
-} 
+}
