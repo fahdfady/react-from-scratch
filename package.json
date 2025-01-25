@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "bun run server.ts",
     "build": "bun build ./src/index.ts --outdir ./build --target browser",
-    "watch": "bun build ./src/index.ts --outdir ./build --watch --target browser"
+    "watch": "bun build ./src/index.ts --outdir ./build --watch --target browser",
+    "test": "bun run ./test/test.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.1.17"

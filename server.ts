@@ -32,5 +32,23 @@ const server = Bun.serve({
     }
 })
 
-console.log(`Server running on port ${PORT} ...(*￣０￣)ノ`)
+const kaomojis = [
+    "(¬‿¬)",
+    "(◕‿◕)",
+    "(✿◠‿◠)",
+    "(╯°□°）╯︵ ┻━┻",
+    "(ง'̀-'́)ง",
+    "(｡♥‿♥｡)",
+    "(≧◡≦)",
+    "(⊙_☉)",
+    "(◕‿-)",
+    "✪ ω ✪",
+    "(*￣０￣)ノ",
+    "༼ つ ◕_◕ ༽つ",
+    "ヽ(°〇°)ﾉ",
+    "(⓿_⓿)",
+];
+const randomKaomoji = kaomojis[Math.floor(Math.random() * kaomojis.length)];
+
+console.log(`Server running on port ${PORT} ...${randomKaomoji}`)
 console.log(`http://localhost:${PORT}`)
