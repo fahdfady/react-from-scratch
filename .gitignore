@@ -1,3 +1,6 @@
 build
 
 node_modules
+
+# the inspect file, not necessary, you can run your own tests
+test/inspect.json

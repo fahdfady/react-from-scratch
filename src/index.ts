@@ -3,28 +3,22 @@ import * as core from "./handlers/core";
 
 // functional component
 function MyComponent(props: { title: string }) {
-    const [HW, setHW] = core.useState("Hello World")
-    console.log(HW)
-    setHW("Hello World 2")
-    console.log(HW)
-    console.log(core.useState(0))
-    
-    return core.createElement("h1", {}, props.title);
+    const [HW, setHW] = core.useState(props.title);
+    setHW("Hello World");
+    return core.createElement("h1", { style: "font-size:46px;" }, HW);
 }
 
 const functionalElement = core.createElement(MyComponent, { title: "Welcome!" });
 
 const MAINELEMENT = core.createElement("div", { id: "test" },
-    core.createElement("span", { className: "child" }, "Hello World",), functionalElement, MyComponent({ title: "J. Cole Better than Kendrick" })
+    functionalElement, core.createElement("h2", { style: "color:red; font-size:28px;" }, "J. Cole Better than Kendrick")
 );
 
-console.log(JSON.stringify(MAINELEMENT, null, 2));
 
-// This is called ReactDOM.render in react
 
 const rootElement: HTMLElement | null = document.querySelector("#root");
 
-// to apply components to the dom for functinal components we'll use a lazy-evaluation approach of a Tree datastrcutre
-// a recursive function that turn the lazy internal metadata into a full view tree
+const vdomViewTree = core.generateViewTree(MAINELEMENT);
 
-core.applyComponentsToDom(core.generateViewTree(MAINELEMENT), rootElement)
+console.log(JSON.stringify(vdomViewTree, null, 2));
+core.applyComponentsToDom(vdomViewTree, rootElement)
